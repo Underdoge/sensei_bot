@@ -134,3 +134,5 @@ dmypy.json
 .pyre/
 config.py
 veryopeninglichbot.json
+pronunciation*.*
+pronunciation*

@@ -78,7 +78,6 @@ def menu_option(update, context):
     # Some clients may have trouble otherwise. See https://core.telegram.org/bots/api#callbackquery
     query.answer()
 
-
 @send_typing_action
 def help(update, context):
     """
@@ -87,7 +86,6 @@ def help(update, context):
     status = check_id(update)
     if status:
         update.message.reply_text('Say hi or type /menu to start chatting')
-
 
 def send_audio(update, context, filename):
     """
@@ -115,14 +113,14 @@ def message_reply(update, context):
             if context.chat_data['option'][0]=='1':  # option 1 selected in previous step        
                 synthesize_text(update.message.text, filename)
                 send_audio(update, context, filename)
-                followup_line = f"""Hope that helps :) \nIs there anything else you would like to do?"""
-                update.message.reply_text(followup_line)
-                show_menu(update, context)
+            #    followup_line = f"""Hope that helps :) \nIs there anything else you would like to do?"""
+            #    update.message.reply_text(followup_line)
+            #    show_menu(update, context)
                 context.chat_data['filename'] = [filename]
                 context.chat_data['option'] = ['']
-
             elif context.chat_data['option'][0]=='2': # option 2 selected in previous step 
                 translated_text = translate_text(update.message.text)
+                update.message.reply_text(f"\"{update.message.text}\" translates to \"{translate_text}\".")
                 synthesize_text(translated_text, filename)
                 send_audio(update, context, filename)
                 followup_line = f"""Please repeat after me and send your recorded voice over the chat to check if you've pronounce it correctly"""
@@ -132,17 +130,16 @@ def message_reply(update, context):
                 context.chat_data['filename'] = [filename]
                 context.chat_data['option'] = ['']
 
-            else:
-                followup_line = f"""Would you like to do the following?"""
-                update.message.reply_text(followup_line)
-                show_menu(update, context)
+            #else:
+            #    followup_line = f"""Would you like to do the following?"""
+            #    update.message.reply_text(followup_line)
+            #    show_menu(update, context)
     else:
             if update.message.text.lower() in ['hi', 'hello', 'yo', 'good morning', 'good afternoon', 'good evening']:
                 menu(update, context)
             else:
                 update.message.reply_text("Sorry, I'm a young bot so I've trouble understanding you. \n Would you like to do the following?")
                 show_menu(update, context)
-
 
 @send_typing_action
 def voice_check(update, context):
@@ -182,11 +179,9 @@ def voice_check(update, context):
             translated_voice_filename = context.chat_data['filename'][0]
             send_audio(update, context, translated_voice_filename)
 
-
 def error(update, context):
     """Log Errors"""
     logger.warning(f"Update {update} caused error {context.error}")
-
 
 def check_id(update):
     """
@@ -197,7 +192,6 @@ def check_id(update):
     if verification is False:
         update.message.reply_text("Oops! I don't really know you so I cannot talk to you. \n\nSorry about that!")
     return verification
-
 
 def main():
     """
@@ -232,7 +226,6 @@ def main():
     # SIGTERM or SIGABRT. This should be used most of the time, since
     # start_polling() is non-blocking and will stop the bot gracefully.
     updater.idle()
-
 
 if __name__ == '__main__':
     main()
