@@ -10,6 +10,7 @@ Press Ctrl-C on the command line to stop the bot.
 """
 
 import logging
+import html
 from functools import wraps
 
 from telegram import ChatAction, InlineKeyboardButton, InlineKeyboardMarkup, Update
@@ -116,7 +117,7 @@ def message_reply(update, context):
                 context.chat_data['filename'] = [filename]
                 context.chat_data['option'] = ['']
             elif context.chat_data['option'][0]=='2': # option 2 selected in previous step 
-                translated_text = translate_text(update.message.text)
+                translated_text = html.unescape(translate_text(update.message.text))
                 update.message.reply_text(f"\"{update.message.text}\" translates to \"{translated_text}\".")
                 synthesize_text(translated_text, filename)
                 send_audio(update, context, filename)
