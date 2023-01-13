@@ -48,9 +48,6 @@ def menu(update, context):
     """
     status = check_id(update)
     if status:
-        first_name = update.message.chat.first_name
-        opening_line = f"""Hi! \nLet's start learning English together :)"""
-        update.message.reply_text(opening_line)
         show_menu(update, context)
 
 
@@ -64,7 +61,7 @@ def show_menu(update, context):
     ]
 
     reply_markup = InlineKeyboardMarkup(keyboard)
-    update.message.reply_text('Would you like to learn... (click option below)', reply_markup=reply_markup)
+    update.message.reply_text("Hi! Let's start learning English together :) Select an option below:", reply_markup=reply_markup)
 
 
 def menu_option(update, context):
@@ -85,7 +82,7 @@ def help(update, context):
     """
     status = check_id(update)
     if status:
-        update.message.reply_text('Say hi or type /menu to start chatting')
+        update.message.reply_text('Type /p or /menu to start chatting')
 
 def send_audio(update, context, filename):
     """
@@ -120,7 +117,7 @@ def message_reply(update, context):
                 context.chat_data['option'] = ['']
             elif context.chat_data['option'][0]=='2': # option 2 selected in previous step 
                 translated_text = translate_text(update.message.text)
-                update.message.reply_text(f"\"{update.message.text}\" translates to \"{translate_text}\".")
+                update.message.reply_text(f"\"{update.message.text}\" translates to \"{translated_text}\".")
                 synthesize_text(translated_text, filename)
                 send_audio(update, context, filename)
                 followup_line = f"""Please repeat after me and send your recorded voice over the chat to check if you've pronounce it correctly"""
@@ -175,7 +172,7 @@ def voice_check(update, context):
             show_menu(update, context)
             context.chat_data['option'] = ['']
         else:
-            update.message.reply_text(f"Oops! That's not correct. Please try saying {context.chat_data['text'][0]} in {LANGUAGE_CODE.split('-')[1]} again")
+            update.message.reply_text(f"Oops! That's not correct. Please try saying \"{context.chat_data['text'][0]}\" in English again.")
             translated_voice_filename = context.chat_data['filename'][0]
             send_audio(update, context, translated_voice_filename)
 
@@ -204,6 +201,7 @@ def main():
     dp = updater.dispatcher
 
     # on different commands - answer in Telegram
+    dp.add_handler(CommandHandler("p", menu))
     dp.add_handler(CommandHandler("menu", menu))
     dp.add_handler(CommandHandler("start", menu))
     dp.add_handler(CallbackQueryHandler(menu_option))
