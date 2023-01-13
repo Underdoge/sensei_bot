@@ -169,8 +169,6 @@ def voice_check(update, context):
 
         if response==correct:
             update.message.reply_text("That's correct! Good job!")
-            update.message.reply_text("Is there anything else you would like to do?")
-            show_menu(update, context)
             context.chat_data['option'] = ['']
         else:
             update.message.reply_text(f"Oops! That's not correct. Please try saying \"{context.chat_data['text'][0]}\" in English again.")
