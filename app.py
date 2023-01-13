@@ -42,14 +42,14 @@ def send_typing_action(func):
 
 
 @send_typing_action
-def start(update, context):
+def menu(update, context):
     """
-    Send a message when the command /start is issued
+    Send a message when the command /menu is issued
     """
     status = check_id(update)
     if status:
         first_name = update.message.chat.first_name
-        opening_line = f"""Hi {first_name}! \nLet's start learning Japanese together :)"""
+        opening_line = f"""Hi! \nLet's start learning English together :)"""
         update.message.reply_text(opening_line)
         show_menu(update, context)
 
@@ -86,7 +86,7 @@ def help(update, context):
     """
     status = check_id(update)
     if status:
-        update.message.reply_text('Say hi or type /start to start chatting')
+        update.message.reply_text('Say hi or type /menu to start chatting')
 
 
 def send_audio(update, context, filename):
@@ -102,7 +102,6 @@ def send_audio(update, context, filename):
     message = context.bot.send_audio(chat_id=update.effective_message.chat_id, audio=open(filename, 'rb'))
     context.user_data['chat_id'] = [message.chat.id]
     context.user_data['message_id'] = [message.message_id]
-
 
 @send_typing_action
 def message_reply(update, context):
@@ -137,9 +136,9 @@ def message_reply(update, context):
                 followup_line = f"""Would you like to do the following?"""
                 update.message.reply_text(followup_line)
                 show_menu(update, context)
-        else:
+    else:
             if update.message.text.lower() in ['hi', 'hello', 'yo', 'good morning', 'good afternoon', 'good evening']:
-                start(update, context)
+                menu(update, context)
             else:
                 update.message.reply_text("Sorry, I'm a young bot so I've trouble understanding you. \n Would you like to do the following?")
                 show_menu(update, context)
@@ -211,9 +210,11 @@ def main():
     dp = updater.dispatcher
 
     # on different commands - answer in Telegram
-    dp.add_handler(CommandHandler("start", start))
+    dp.add_handler(CommandHandler("menu", menu))
+    dp.add_handler(CommandHandler("start", menu))
     dp.add_handler(CallbackQueryHandler(menu_option))
     dp.add_handler(CommandHandler("help", help))
+
 
     # on noncommand i.e message - echo the message on Telegram
     dp.add_handler(MessageHandler(Filters.text, message_reply))
