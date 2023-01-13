@@ -99,7 +99,6 @@ def send_audio(update, context, filename):
     context.user_data['chat_id'] = [message.chat.id]
     context.user_data['message_id'] = [message.message_id]
 
-@send_typing_action
 def message_reply(update, context):
     """
     Response to normal messages
@@ -139,7 +138,6 @@ def message_reply(update, context):
                 update.message.reply_text("Sorry, I'm a young bot so I've trouble understanding you. \n Would you like to do the following?")
                 show_menu(update, context)
 
-@send_typing_action
 def voice_check(update, context):
     """
     Check user's pronunciations against correct answer
