@@ -113,6 +113,8 @@ def message_reply(update, context):
             #    followup_line = f"""Hope that helps :) \nIs there anything else you would like to do?"""
             #    update.message.reply_text(followup_line)
             #    show_menu(update, context)
+                followup_line = f"""Please repeat after me and send your recorded voice over the chat to check if you pronounced it correctly."""
+                update.message.reply_text(followup_line)
                 context.chat_data['filename'] = [filename]
                 context.chat_data['option'] = ['']
             elif context.chat_data['option'][0]=='2': # option 2 selected in previous step 
@@ -120,7 +122,7 @@ def message_reply(update, context):
                 update.message.reply_text(f"\"{update.message.text}\" translates to \"{translated_text}\".")
                 synthesize_text(translated_text, filename)
                 send_audio(update, context, filename)
-                followup_line = f"""Please repeat after me and send your recorded voice over the chat to check if you've pronounce it correctly"""
+                followup_line = f"""Please repeat after me and send your recorded voice over the chat to check if you pronounced it correctly."""
                 update.message.reply_text(followup_line)
                 context.chat_data['translated_text'] = [translated_text]
                 context.chat_data['text'] = [update.message.text]
