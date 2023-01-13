@@ -1,7 +1,7 @@
 """Language Teacher Bot on Telegram
 
 Using Google APIs, this main script runs a Telegram bot that helps to teach one 
-how to speak a language (Jap in our example).
+how to speak a language (English in our example).
 
 Usage:
 main()
@@ -27,7 +27,6 @@ logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s
                     level=logging.INFO)
 
 logger = logging.getLogger(__name__)
-
 
 def send_typing_action(func):
     """
@@ -77,14 +76,29 @@ def menu_option(update, context):
     query.answer()
 
 @send_typing_action
+def pronounce(update, context):
+    filename = 'pronunciation.mp3'
+    synthesize_text(update.message.text[3::], filename)
+    send_audio(update, context, filename)
+
+@send_typing_action
+def translate(update, context):
+    filename = 'pronunciation.mp3'
+    translated_text = html.unescape(translate_text(update.message.text[3::]))
+    update.message.reply_text(f"\"{update.message.text[3::]}\" translates to \"{translated_text}\".")
+    synthesize_text(translated_text, filename)
+    send_audio(update, context, filename)
+
+@send_typing_action
 def help(update, context):
     """
     Send a message when the command /help is issued
     """
     status = check_id(update)
     if status:
-        update.message.reply_text('Type /p or /menu to start chatting')
+        update.message.reply_text('Type /p <text in English> to get the pronunciation.\n\n Type /t <text in Spanish> to translate from Spanish to English.\n\n Type /menu or /start for more options.')
 
+@send_typing_action
 def send_audio(update, context, filename):
     """
     Send an audio message
@@ -129,10 +143,6 @@ def message_reply(update, context):
                 context.chat_data['filename'] = [filename]
                 context.chat_data['option'] = ['']
 
-            #else:
-            #    followup_line = f"""Would you like to do the following?"""
-            #    update.message.reply_text(followup_line)
-            #    show_menu(update, context)
     else:
             if update.message.text.lower() in ['hi', 'hello', 'yo', 'good morning', 'good afternoon', 'good evening']:
                 menu(update, context)
@@ -200,12 +210,12 @@ def main():
     dp = updater.dispatcher
 
     # on different commands - answer in Telegram
-    dp.add_handler(CommandHandler("p", menu))
+    dp.add_handler(CommandHandler("p", pronounce))
+    dp.add_handler(CommandHandler("t", translate))
     dp.add_handler(CommandHandler("menu", menu))
     dp.add_handler(CommandHandler("start", menu))
     dp.add_handler(CallbackQueryHandler(menu_option))
     dp.add_handler(CommandHandler("help", help))
-
 
     # on noncommand i.e message - echo the message on Telegram
     dp.add_handler(MessageHandler(Filters.text, message_reply))
