@@ -129,6 +129,7 @@ def message_reply(update, context):
             #    show_menu(update, context)
                 followup_line = f"""Please repeat after me and send your recorded voice over the chat to check if you pronounced it correctly."""
                 update.message.reply_text(followup_line)
+                context.chat_data['translated_text'] = [update.message.text]
                 context.chat_data['filename'] = [filename]
                 context.chat_data['option'] = ['']
             elif context.chat_data['option'][0]=='2': # option 2 selected in previous step 
@@ -198,8 +199,10 @@ def check_id(update):
     for ID in TELEGRAM_ID:
         if id==ID:
             verification = True
+            break
     if not verification:
         update.message.reply_text("Oops! I don't really know you so I cannot talk to you. \n\nSorry about that!")
+    print("User allowed:",verification)
     return verification
 
 def main():
