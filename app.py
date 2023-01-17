@@ -144,13 +144,6 @@ def message_reply(update, context):
                 context.chat_data['filename'] = [filename]
                 context.chat_data['option'] = ['']
 
-    else:
-            if update.message.text.lower() in ['hi', 'hello', 'yo', 'good morning', 'good afternoon', 'good evening']:
-                menu(update, context)
-            else:
-                update.message.reply_text("Sorry, I'm a young bot so I've trouble understanding you. \n Would you like to do the following?")
-                show_menu(update, context)
-
 def voice_check(update, context):
     """
     Check user's pronunciations against correct answer
