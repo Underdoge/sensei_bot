@@ -171,11 +171,11 @@ def voice_check(update, context):
             correct = context.chat_data['translated_text'][0]
             response = response_text
 
-        if response==correct:
+        if response.lower()==correct.lower():
             update.message.reply_text("That's correct! Good job!")
             context.chat_data['option'] = ['']
         else:
-            update.message.reply_text(f"Oops! That's not correct. Please try saying \"{context.chat_data['text'][0]}\" in English again.")
+            update.message.reply_text(f"Oops! That's not correct. You said \"{response}\". Please try saying \"{correct}\" again.")
             translated_voice_filename = context.chat_data['filename'][0]
             send_audio(update, context, translated_voice_filename)
 
