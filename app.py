@@ -193,9 +193,12 @@ def check_id(update):
     """
     Check sender's ID is allowed
     """
+    verification = False
     id = int(update.message.from_user.id)
-    verification = True if (id==TELEGRAM_ID or TELEGRAM_ID is None) else False
-    if verification is False:
+    for ID in TELEGRAM_ID:
+        if id==ID:
+            verification = True
+    if not verification:
         update.message.reply_text("Oops! I don't really know you so I cannot talk to you. \n\nSorry about that!")
     return verification
 
